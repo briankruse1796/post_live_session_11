@@ -1,0 +1,75 @@
+---
+title: "IDS section 404 post live session 11"
+author: "Brian Kruse"
+date: "11/20/2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This R markdown loads and uses the fpp package
+```{/users/briankruse/desktop/live session 11 ids.R}
+```
+
+
+## Including Plots
+Questions a) After plotting the time series we do not see
+any seasonal fluctuations and we see an upward trend since 1980.
+
+```{r v, echo=FALSE}
+library(fpp) 
+data(ukcars)
+v <- ukcars
+plot(v)
+```
+
+Use a classical decomposition to calculate the trend-cycle and seasonal indices. 
+
+
+c)	Do the results support the graphical interpretation from part (a)? 
+yes it does because we start with a downward tred and go up on the first two parts. The third one is a perfectly seasonally adjusted trend. The fourth one identifies random walk 
+```{r fitd, echo=FALSE}
+
+fitd <- decompose(v) 
+plot(fitd)
+
+```
+
+
+d)	Compute and plot the seasonally adjusted data. 
+```{r eeadj, echo=FALSE}
+eeadj <- seasadj(fitd)
+plot(eeadj)
+
+```
+
+e)	Change one observation to be an outlier (e.g., add 500 to one observation), and recompute the seasonally adjusted data. What is the effect of the outlier? The outlier creates a spike in the plot.
+
+```{r v2, echo=FALSE}
+library(tseries)
+v2 <- ts(c(v[1:54],
+                   v[55]+500,v[56:113] ),
+                 start=c(1977,1),frequency=4)
+plot(v2)
+
+```
+
+
+f)	Does it make any difference if the outlier is near the end rather than in the middle of the time series? 
+yes it makes a difference during decomposition
+the trend flattens out on first display and last display
+
+```{r fitdv, echo=FALSE}
+fitdv <- decompose(v2) 
+plot(fitdv)
+```
+
+
+g)	Use STL to decompose the series. 
+```{r v2.stl, echo=FALSE}
+v2.stl = stl(v2, s.window="periodic")
+
+plot (v2.stl)
+```
